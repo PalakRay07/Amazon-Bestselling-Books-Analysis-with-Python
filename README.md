@@ -136,7 +136,7 @@ Amazon-Books-ML/
 ---
 
 ## 👩‍💻 Author
-Palak Ray  
+Palak.  
 AI/ML Intern  
 palak070704@gmail.com
 """
