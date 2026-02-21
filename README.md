@@ -1,152 +1,148 @@
-# ==============================
-# Amazon Bestselling Books ML Project
-# ==============================
+# generate_readme.py
 
-# --------- Import Libraries ----------
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+readme_content = r"""
+# 📚 Amazon Bestselling Books — Data Analysis & Genre Prediction (Machine Learning)
 
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-import joblib
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
+![ML](https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-orange)
+![Status](https://img.shields.io/badge/Project-Completed-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-# --------- Load Dataset ----------
-df = pd.read_csv("bestsellers.with.categories.csv")
+---
 
-print("First 5 rows:")
-print(df.head())
+## 📌 Project Overview
+This project performs Exploratory Data Analysis (EDA) and builds a Machine Learning classification model on Amazon’s Top 50 Bestselling Books dataset (2009–2019).
 
-print("\nDataset Shape:", df.shape)
-print("\nInfo:")
-print(df.info())
+The objective is to analyze reader behavior and predict whether a book will belong to the Fiction or Non-Fiction category using measurable attributes such as ratings, reviews, price, and year.
 
-# --------- Data Cleaning ----------
-# Rename columns (easier to use)
-df.columns = [
-    "Name",
-    "Author",
-    "User_Rating",
-    "Reviews",
-    "Price",
-    "Year",
-    "Genre"
-]
+Workflow:
+raw dataset → data cleaning → visualization → model training → evaluation
 
-# Check missing values
-print("\nMissing Values:")
-print(df.isnull().sum())
+---
 
-# Remove duplicates
-df.drop_duplicates(inplace=True)
+## 🎯 Problem Statement
+Can we predict the genre of a bestselling book using numerical features?
 
-# --------- Basic Statistics ----------
-print("\nStatistical Summary:")
-print(df.describe())
+Features:
+- User Rating
+- Review Count
+- Price
+- Bestseller Year
 
-# --------- EDA Visualizations ----------
-sns.set_style("darkgrid")
+Target:
+- Genre (Fiction / Non-Fiction)
 
-# Genre Count
-plt.figure(figsize=(6,4))
-sns.countplot(x="Genre", data=df)
-plt.title("Fiction vs Non-Fiction Books")
-plt.savefig("genre_distribution.png")
-plt.show()
+---
 
-# Rating Distribution
-plt.figure(figsize=(6,4))
-sns.histplot(df["User_Rating"], bins=20, kde=True)
-plt.title("User Rating Distribution")
-plt.savefig("rating_distribution.png")
-plt.show()
+## 📊 Dataset Information
 
-# Price vs Rating
-plt.figure(figsize=(6,4))
-sns.scatterplot(x="Price", y="User_Rating", hue="Genre", data=df)
-plt.title("Price vs User Rating")
-plt.savefig("price_vs_rating.png")
-plt.show()
+| Attribute | Description |
+|----------|------------|
+| Name | Book title |
+| Author | Author name |
+| User_Rating | Average rating (0–5) |
+| Reviews | Total number of reviews |
+| Price | Book price |
+| Year | Bestseller year |
+| Genre | Fiction or Non-Fiction |
 
-# Reviews vs Rating
-plt.figure(figsize=(6,4))
-sns.scatterplot(x="Reviews", y="User_Rating", hue="Genre", data=df)
-plt.title("Reviews vs User Rating")
-plt.savefig("reviews_vs_rating.png")
-plt.show()
+Records: 550+ books
 
-# Correlation Heatmap
-plt.figure(figsize=(6,5))
-corr = df[["User_Rating","Reviews","Price","Year"]].corr()
-sns.heatmap(corr, annot=True, cmap="coolwarm")
-plt.title("Feature Correlation Heatmap")
-plt.savefig("correlation_heatmap.png")
-plt.show()
+---
 
-# --------- Machine Learning Model ----------
-print("\n===== MACHINE LEARNING: GENRE CLASSIFIER =====")
+## 🛠️ Technology Stack
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-learn
+- Joblib
 
-# Encode Genre (Target variable)
-le = LabelEncoder()
-df["Genre_encoded"] = le.fit_transform(df["Genre"])
-# Fiction = 0, Non-Fiction = 1 (may vary)
+---
 
-# Features & Target
-X = df[["User_Rating", "Reviews", "Price", "Year"]]
-y = df["Genre_encoded"]
+## 📈 Visual Results
 
-# Feature Scaling
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+### Genre Distribution
+![Genre](images/genre_distribution.png)
 
-# Train Test Split
-X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.2, random_state=42
-)
+### Price vs Rating
+![PriceRating](images/price_vs_rating.png)
 
-# Model
-model = LogisticRegression()
-model.fit(X_train, y_train)
+### Reviews vs Rating
+![ReviewsRating](images/reviews_vs_rating.png)
 
-# Predictions
-y_pred = model.predict(X_test)
+### Correlation Heatmap
+![Heatmap](images/correlation_heatmap.png)
 
-# --------- Evaluation ----------
-accuracy = accuracy_score(y_test, y_pred)
+### Confusion Matrix
+![CM](images/confusion_matrix.png)
 
-print("\nModel Accuracy:", accuracy)
+---
 
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
+## 🤖 Machine Learning Model
 
-# Confusion Matrix
-cm = confusion_matrix(y_test, y_pred)
-plt.figure(figsize=(5,4))
-sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-plt.xlabel("Predicted")
-plt.ylabel("Actual")
-plt.title("Confusion Matrix")
-plt.savefig("confusion_matrix.png")
-plt.show()
+Algorithm Used: Logistic Regression
 
-# --------- Save Model ----------
-joblib.dump(model, "genre_classifier_model.pkl")
-joblib.dump(scaler, "scaler.pkl")
+Preprocessing:
+- Removed duplicates
+- Encoded labels
+- Feature scaling
+- 80/20 train-test split
 
-print("\nModel saved as genre_classifier_model.pkl")
-print("Scaler saved as scaler.pkl")
+Input Features:
+- User_Rating
+- Reviews
+- Price
+- Year
 
-# --------- Example Prediction ----------
-print("\nExample Prediction:")
+Target:
+0 → Fiction
+1 → Non-Fiction
 
-sample_book = [[4.8, 15000, 10, 2018]]  # rating, reviews, price, year
-sample_scaled = scaler.transform(sample_book)
+---
 
-prediction = model.predict(sample_scaled)
+## ▶️ Running the Project
 
-genre_result = le.inverse_transform(prediction)
+Clone:
+git clone https://github.com/PalakRay07/Amazon-Books-ML.git
 
-print("Predicted Genre:", genre_result[0])
+Install:
+pip install pandas numpy matplotlib seaborn scikit-learn joblib
+
+Run:
+python book_analysis_ml.py
+
+---
+
+## 📂 Project Structure
+Amazon-Books-ML/
+│
+├── bestsellers.with.categories.csv
+├── book_analysis_ml.py
+├── genre_classifier_model.pkl
+├── scaler.pkl
+├── images/
+└── README.md
+
+---
+
+## 💡 Future Improvements
+- Recommendation system
+- Streamlit web app
+- Cloud deployment
+- Advanced ML models
+
+---
+
+## 👩‍💻 Author
+Palak Ray  
+AI/ML Intern  
+palak070704@gmail.com
+"""
+
+# Write to README.md
+with open("README.md", "w", encoding="utf-8") as f:
+    f.write(readme_content)
+
+print("README.md file generated successfully!")
